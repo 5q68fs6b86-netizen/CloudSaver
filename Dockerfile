@@ -1,14 +1,14 @@
 FROM node:18-alpine AS frontend-build
 WORKDIR /build/frontend
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
 FROM node:18-alpine AS backend-build
 WORKDIR /build/backend
 COPY backend/package*.json ./
-RUN npm ci
+RUN npm install
 COPY backend/ ./
 RUN npm run build
 
@@ -28,7 +28,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 
 RUN chmod +x /app/docker-entrypoint.sh \
-  && npm --prefix /app/backend ci --omit=dev
+  && npm --prefix /app/backend install --omit=dev
 
 VOLUME ["/app/config"]
 
